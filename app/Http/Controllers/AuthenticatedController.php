@@ -25,7 +25,7 @@ class AuthenticatedController extends Controller
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Usuário desconhecido'], 401);
         }
-        Redis::set('user', serialize(auth('api')->user()));
+        Redis::set('user', auth('api')->id());
         
         return $this->respondWithToken($token);
     }
