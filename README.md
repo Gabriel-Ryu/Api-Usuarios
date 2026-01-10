@@ -21,4 +21,5 @@ Configuração:
  - ./vendor/bin/sail artisan jwt:secret para gerar a chave do JWT.
  - ./vendor/bin/sail artisan migrate para configurar a estrutura das tabelas.
  - ./vendor/bin/sail composer require vladimir-yuldashev/laravel-queue-rabbitmq para instalar a integração do rabbitmq
+ - ./vendor/bin/sail artisan queue:work --queue=default para rodar a fila de envio de emails
  - O envio de email já está setado na .env.example para enviar para o laravel.log, para testar o envio de email recomenda-se usar o mailtrap.
