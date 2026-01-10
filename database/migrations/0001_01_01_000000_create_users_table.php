@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('login')->unique();
             $table->string('password');
-            $table->boolean('adm')->default(false);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

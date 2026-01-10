@@ -10,7 +10,6 @@ class TokenController extends Controller
 {
     public function checkToken(){
         try {
-            info('cai aqui?');
             JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json(['error' => true, 'message' => 'Token inválido'], 401);

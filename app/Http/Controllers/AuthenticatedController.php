@@ -6,11 +6,12 @@ use Exception;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\UserService;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Controllers\Controller;
 use App\Repository\UserRepo;
 use Illuminate\Support\Facades\Redis;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthenticatedController extends Controller
 {
@@ -20,13 +21,12 @@ class AuthenticatedController extends Controller
     }
     public function login(Request $request){
 
-        $credentials = $request->only('login', 'password');
+        $credentials = $request->only('email', 'password');
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         Redis::set('user', serialize(auth('api')->user()));
         
-
         return $this->respondWithToken($token);
     }
 
@@ -39,7 +39,6 @@ class AuthenticatedController extends Controller
      */
     protected function respondWithToken($token)
     {
-        info('ent num responde');
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -49,32 +48,22 @@ class AuthenticatedController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
-        try{
-            $validated = $request->validated();
-            if($validated === false){
-                throw new Exception('erro para registrar usuário');
-            }
-            $user = UserRepo::create($validated);
-            info(print_r($user, true)); 
-            if($user['errorCode'] != 200){
-                return $user;
-            }
+        $validated = $request->validated();
+        if($validated === false){
+            throw new Exception('erro para registrar usuario');
+        }
+        $user = UserRepo::create($validated);
+        if($user['errorCode']){
             return [
-                'error' => false,
-                'message' => "User successful registered, id: $user"
+                'error' => true,
+                'message' => $user['message']
             ];
         }
-        catch (\Throwable $th) {
-            \Log::error($th);
+        Mail::to($user['email'])->send(new WelcomeEmail($user));
 
-            $code = $th->getCode() >= 400 
-                ? $th->getCode()
-                : 500;
-
-            return response()->json([
-                'error' => true,
-                'message' => $th->getMessage(),
-            ], $code);
-        }
+        return [
+            'error' => false,
+            'message' => "Usuario cadastrado com sucesso, id: {$user['id']}"
+        ];
     }
 }
