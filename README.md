@@ -17,7 +17,7 @@ A aplicação conta também com as rotas de login, que ao passar os parâmetros 
 Configuração:
  - docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php84-composer:latest composer install --ignore-platform-reqs para instalar as dependências do projeto.
  - Configurar o .env de forma adequada para rodar no ambiente desejado, com foco nos campos de aplicação (APP_), banco de dados (DB_).
+ - ./vendor/bin/sail up -d --build para subir o container do projeto.
  - ./vendor/bin/sail artisan jwt:secret para gerar a chave do JWT. ./vendor/bin/sail artisan migrate para configurar a estrutura das tabelas.
  - ./vendor/bin/sail composer require vladimir-yuldashev/laravel-queue-rabbitmq para instalar a integração do rabbitmq
- - ./vendor/bin/sail up -d para subir o container do projeto.
  - O envio de email já está setado na .env.example para enviar para o laravel.log, para testar o envio de email recomenda-se usar o mailtrap.
