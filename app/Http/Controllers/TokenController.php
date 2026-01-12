@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
 
+/**
+ * @group Tokenização, controle de autorização do usuário usando o JWT
+ * 
+ */
 class TokenController extends Controller
 {
     public function checkToken(){
